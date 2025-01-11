@@ -1,4 +1,4 @@
-console.log('%cCopyright \xA9 2024 imbyter', 'background-color: #000000; color: white; font-size: 24px; font-weight: bold; padding: 10px;');
+console.log('%cCopyright \xA9 2025 unname0219', 'background-color: #000000; color: white; font-size: 24px; font-weight: bold; padding: 10px;');
 console.log('%c   /\\_/\\', 'color: #8B4513; font-size: 20px;');
 console.log('%c  ( o.o )', 'color: #8B4513; font-size: 20px;');
 console.log(' %c  > ^ <', 'color: #8B4513; font-size: 20px;');
@@ -62,8 +62,8 @@ document.addEventListener('DOMContentLoaded', function () {
 	var html = document.querySelector('html');
 	var themeState;
 	if (isMobile()) {
-		themeState = getCookie('themeState') || 'Dark';
-	} else {
+		themeState = getCookie('themeState') || 'Light';
+	} else { 
 		themeState = getCookie('themeState') || 'Light';
 	}
 
@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	function changeTheme(theme) {
 		tanChiShe.src = './static/svg/snake-' + theme + '.svg';
 		if (theme == 'Light'){
-			document.documentElement.style.setProperty('--main_bg_color', 'url(../img/background.jpg)');
+			document.documentElement.style.setProperty('--main_bg_color', 'url(../img/background.png)');
 		}
 		else{
 			document.documentElement.style.setProperty('--main_bg_color', '#000000');
