@@ -1,0 +1,43 @@
+/*
+--svgcolor svg图标的颜色
+--main-bg-color主页背景
+--main-text-color文本颜色
+--gradient标题渐变颜色
+
+--purple-text-color描述紫色文本颜色
+--text-bg-color描述紫色文本背景颜色
+--item-bg-color项目背景颜色
+--item-hover-color项目鼠标移入颜色
+--item-left-title-color项目标题颜色
+--item-left-text-color项目描述颜色
+--footer-text-color底部文本颜色
+--left-tag-item左侧标签颜色
+--card-filter卡片模糊的数值
+--back-filter背景模糊的数值
+--back-filter-color全局阴影遮罩
+
+只有最下面的会生效,也就是将你要设置的主题剪切到最下面
+*/
+
+.index-logo{
+    display: none;
+}
+
+html {
+    --name: 主题1;
+    --main_bg_color: url(../img/background.png);
+    --main_text_color: #eeeeee;
+    --gradient: linear-gradient(120deg, #bd34fe, #e0321b 30%, #41d1ff 60%);
+    --purple_text_color: #ffffff;
+    --text_bg_color: #00000040;
+    --item_bg_color: #00000038;
+    --item_hover_color: #33333338;
+    --item_left_title_color: #ffffff;
+    --item_left_text_color: #ffffff;
+    --footer_text_color: #ffffff;
+    --left_tag_item: rgb(27 42 57 / 20%);
+    --card_filter: 15px;
+    --back_filter: 0px;
+    --back_filter_color: #00000030;
+    --fill:#ffffff;
+}*/
