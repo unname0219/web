@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <title>GT网页靓照查看</title>
+    <style>
+      body {
+        background-color: #222;
+        color: #fff;
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        box-sizing: border-box;
+        padding: 20px;
+      }
+      .image {
+        border: 2px solid #fff;
+        box-sizing: border-box;
+        width: 90%;
+        max-width: 500px;
+        height: auto;
+        margin-bottom: 20px;
+      }
+      .input {
+        width: 90%;
+        max-width: 500px;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        background-color: #444;
+        color: #fff;
+        text-align: center;
+      }
+      .button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        background-color: #00bfff;
+        color: #fff;
+        font-size: 16px;
+        cursor: pointer;
+        margin-bottom: 20px;
+      }
+      .slider {
+        width: 90%;
+        max-width: 500px;
+        margin-bottom: 20px;
+      }
+      .slider::-webkit-slider-thumb,
+      .slider::-moz-range-thumb,
+      .slider::-ms-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        background-color: #00bfff;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <p>自己人看看就好了，不要乱发，以免炼铜术士破防！</p>
+    <div class="container">
+      <img class="image" src="https://gt-league.github.io/images/gtlogo.jpg">
+      <input class="input" type="number" min="1" placeholder="输入正整数">
+      <button class="button">GO</button>
+      <input class="slider" type="range">
+    </div>
+    <script>
+      var image = document.querySelector('.image');
+      var input = document.querySelector('.input');
+      var button = document.querySelector('.button');
+      var slider = document.querySelector('.slider');
+
+      button.addEventListener('click', function() {
+        var num = input.value;
+        image.src = 'https://gt-league.github.io/images/gt' + num + '.jpg';
+      });
+
+      slider.addEventListener('input', function() {
+        var size = this.value + '%';
+        image.style.width = size;
+      });
+    </script>
+    
+  </body>
+</html>

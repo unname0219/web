@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>浙江省招生考试信息管理系统</title>
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache">
+    <link href="./Login_files/login.css" rel="stylesheet">
+    <script type="text/javascript" src="./Login_files/jquery-1.8.0.min.js"></script>
+    <script type="text/javascript" src="./Login_files/jiami.js"></script>
+    <script type="text/javascript" src="./Login_files/Code.js"></script>
+    <script type="text/javascript"> $(function () {
+            $("input[id='isadmin']").click(function () { var vstr = $("input[id='isadmin']:checked").val(); if (vstr == "" || vstr == undefined) { $("#sfzlbl").html("身份证："); } else { $("#sfzlbl").html("用户名："); } });
+
+            $.post("ashx/loginHandler.ashx", { title: "checkurl" }, function (data) {
+                if (data != "success") {
+                    alert('请从考试院官网进入志愿填报系统!');
+                    window.location.href = "https://www.zjzs.net/";
+                }
+            }, 'text');
+
+            $.post("ashx/loginHandler.ashx", { title: "getbasedata" }, function (data) {
+                if (data != "0") {
+                    window.location.href = "logout.aspx";
+                }
+            }, 'text');
+        });
+
+        function tijiao() {
+            var shenfenzheng = $("#shenfenzheng").val();
+            if (shenfenzheng == "") { alert("身份证不能为空！"); return false; }
+            var mima = $("#mima").val(); if (mima == "") { alert("密码不能为空！"); return false; }
+            var yzm; yzm = $("#yzm").val(); if (yzm == "") { alert("验证码不能为空"); return false; }
+            var mima_jiami = jiami(mima);
+            var isadmin = $("#isadmin").attr("checked");
+            if (isadmin == "checked") { isadmin = true; }
+            $.post("ashx/loginHandler.ashx", { title: "login", shenfenzheng: shenfenzheng, mima: mima_jiami, yzm: yzm, isadmin: isadmin }, function (data) {
+                if (data.status == "success") {
+                    window.location.href = data.url;
+                } else {
+                    $("#imgVerify").attr('src', $("#imgVerify").attr('src') + '?');
+                    alert(data.des);
+                }
+            }, 'json');
+        }    
+    </script>
+</head>
+
+<body>
+    <div class="bg">
+        <div id="log_left"> 浙江省高校招生考试信息管理系统<br>
+            <p style=" text-align:right;"> <a target="_blank"
+                    style=" font-size:18px; color:Red; font-family:NSimSun; margin-left:10px;"
+                    href="https://pgzy.zjzs.net:4431/shuoming.doc">查看使用说明</a><br> <a target="_blank"
+                    style=" font-size:18px; color:Red; font-family:NSimSun; margin-left:10px;"
+                    href="https://www.zjzs.net/moban/index/8a11f15383d0742c0183d0bd2f990001.html">浙江省教育考试院关于做好2023年普通高校招生考试报名工作的通知</a><br>
+                <a target="_blank" style=" font-size:18px; color:Red; font-family:NSimSun; margin-left:10px;"
+                    href="https://www.zjzs.net/moban/index/8a11f15487251ae60187264087d50001.html">浙江省教育考试院关于做好2023年6月高考外语、选考信息确认工作的通知</a><br>
+                <a target="_blank" style=" font-size:18px; color:Red; font-family:NSimSun; margin-left:10px;"
+                    href="https://www.zjzs.net/moban/index/8a11f1558731ed5201873204ebca000a.html">浙江省教育考试院关于做好2023年7月普通高中学业水平考试报名工作的通知</a><br>
+            </p>
+        </div>
+        <div id="log_middle"></div>
+        <div id="log_right">
+            <table class="logintb">
+                <tbody>
+                    <tr>
+                        <td class="loginleft"> <label id="sfzlbl">证件号：</label> </td>
+                        <td class="loginright"> <input id="shenfenzheng" name="shenfenzheng" class="loginInput"
+                                value=""> </td>
+                    </tr>
+                    <tr>
+                        <td class="loginleft"> <label> 密 码：</label> </td>
+                        <td class="loginright"> <input id="mima" name="mima" type="password" class="loginInput"
+                                value=""><br> </td>
+                    </tr>
+                    <tr>
+                        <td class="loginleft"> <label>验证码：</label> </td>
+                        <td> <input id="yzm" name="yzm" class="loginInput"
+                                style="width: 150px; float: left; border-color: rgb(153, 153, 153);" type="text"
+                                onfocus="this.style.borderColor='#3366ff'" onblur="this.style.borderColor='#999'"> <img
+                                id="imgVerify" src="./Login_files/VerifyCode.aspx" style="margin-left:10px; float:left"
+                                alt="看不清？点击更换" onclick=" this.src = this.src + '?'; "> </td>
+                    </tr>
+                    <tr>
+                        <td class="loginleft"> <label>管理员：</label> </td>
+                        <td> <input type="checkbox" id="isadmin">是 </td>
+                    </tr>
+                    <tr>
+                        <td class="loginleft"></td>
+                        <td class="loginright"> <input id="Button1" class="loginInput1" type="button" value="登录"
+                                onclick="window.location.href='./get.html'" style="font-weight: bold; cursor:pointer; color:#333;">
+                            <span></span> </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div style=" text-align:center; color:Red;font-size:18px;"><br>
+        说明：考生参加考试报名时请先以有效证件注册账号，该账号在本系统所有考试项目通用，不需重复注册。<br><br> 注意：请使用360安全浏览器（兼容模式）、Google Chrome、Mozilla
+        Firefox、IE8.0及以上版本浏览器，不要使用手机和平板电脑。 </div>
+    <div class="footer">版权所有：浙江省教育考试院</div>
+</body>
+
+</html>
