@@ -12,13 +12,13 @@ jobs:
 
       - name: Generate supindex.html
         run: |
-          cat << "EOF" > supindex.html
+          cat << EOF > supindex.html
           <!DOCTYPE html>
           <html lang="en">
           <head>
               <meta charset="UTF-8">
               <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <title>Web Files Index</title>
+              <title>Web Index</title>
               <style>
                   :root {
                       --bg-color: #0d1117;
@@ -64,34 +64,17 @@ jobs:
                       text-decoration: underline;
                   }
 
-                  .icon-container {
+                  .icon {
                       width: 16px;
                       height: 16px;
-                      display: inline-block;
-                  }
-
-                  .icon {
-                      width: 100%;
-                      height: 100%;
+                      fill: currentColor;
                   }
               </style>
-              <svg style="display: none;">
-                  <symbol id="icon-file" viewBox="0 0 16 16">
-                      <path fill-rule="evenodd" d="M3.75 1.5a.25.25 0 00-.25.25v11.5c0 .138.112.25.25.25h8.5a.25.25 0 00.25-.25V6H9.75A1.75 1.75 0 018 4.25V1.5H3.75zm5.75.56v2.19c0 .138.112.25.25.25h2.19L9.5 2.06zM2 1.75C2 .784 2.784 0 3.75 0h5.086c.464 0 .909.184 1.237.513l3.414 3.414c.329.328.513.773.513 1.237v8.086A1.75 1.75 0 0112.25 15h-8.5A1.75 1.75 0 012 13.25V1.75z"/>
-                  </symbol>
-              </svg>
           </head>
           <body>
-              <h1>All Web Files Index</h1>
+              <h1>Files Index</h1>
               <ul class="file-list">
-                  $(find . -type f \
-                  ! -path './.git/*' \
-                  ! -name 'supindex.html' \
-                  ! -path './.github/*' \
-                  ! -name '.gitignore' \
-                  ! -name 'LICENSE' \
-                  ! -name 'README.md' \
-                  -printf '<li class="file-item"><div class="icon-container"><svg class="icon"><use xlink:href="#icon-file"/></svg></div><a href="%P">%P</a></li>\n')
+                  $(find . -type f ! -path './.git/*' ! -name 'supindex.html' ! -name '.gitignore' ! -name 'LICENSE' ! -name 'README.md' ! -path './.github/*' -printf '<li class="file-item"><svg class="icon" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M3.75 1.5a.25.25 0 00-.25.25v11.5c0 .138.112.25.25.25h8.5a.25.25 0 00.25-.25V6H9.75A1.75 1.75 0 018 4.25V1.5H3.75zm5.75.56v2.19c0 .138.112.25.25.25h2.19L9.5 2.06zM2 1.75C2 .784 2.784 0 3.75 0h5.086c.464 0 .909.184 1.237.513l3.414 3.414c.329.328.513.773.513 1.237v8.086A1.75 1.75 0 0112.25 15h-8.5A1.75 1.75 0 012 13.25V1.75z"></path></svg><a href="%P">%P</a></li>\n')
               </ul>
           </body>
           </html>
