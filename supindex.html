@@ -2,17 +2,207 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Web Index</title>
     <style>
-        /* 样式代码 */
-    </style> 
+        :root {
+            --bg-color: #0d1117;
+            --text-color: #c9d1d9;
+            --border-color: #30363d;
+            --link-color: #58a6ff;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            margin: 2em auto;
+            max-width: 800px;
+            padding: 0 20px;
+        }
+
+        .file-list {
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            list-style: none;
+            padding: 0;
+        }
+
+        .file-item {
+            padding: 8px 16px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+        }
+
+        .file-item:last-child {
+            border-bottom: none;
+        }
+
+        .file-item a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+
+        .file-item a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
     <h1>Files Index</h1>
     <ul class="file-list">
-        1859(find . -type f ! -path './.git/*' ! -name 'supindex.html' ! -name '.gitignore' ! -name 'LICENSE' ! -name 'README.md' ! -path './.github/*' -printf '<li class="file-item"><a href="%P">%P</a></li>\n')
+        <li class="file-item"><a href="static/img/i5.png">static/img/i5.png</a></li>
+<li class="file-item"><a href="static/img/i1.png">static/img/i1.png</a></li>
+<li class="file-item"><a href="static/img/i3.png">static/img/i3.png</a></li>
+<li class="file-item"><a href="static/img/i7.png">static/img/i7.png</a></li>
+<li class="file-item"><a href="static/img/favicon.ico">static/img/favicon.ico</a></li>
+<li class="file-item"><a href="static/img/c.svg">static/img/c.svg</a></li>
+<li class="file-item"><a href="static/img/logo.png">static/img/logo.png</a></li>
+<li class="file-item"><a href="static/img/i2.png">static/img/i2.png</a></li>
+<li class="file-item"><a href="static/img/background3.jpg">static/img/background3.jpg</a></li>
+<li class="file-item"><a href="static/img/background.jpg">static/img/background.jpg</a></li>
+<li class="file-item"><a href="static/img/i4.png">static/img/i4.png</a></li>
+<li class="file-item"><a href="static/img/wx.jpg">static/img/wx.jpg</a></li>
+<li class="file-item"><a href="static/img/i6.png">static/img/i6.png</a></li>
+<li class="file-item"><a href="static/img/background.png">static/img/background.png</a></li>
+<li class="file-item"><a href="static/img/background3.webp">static/img/background3.webp</a></li>
+<li class="file-item"><a href="static/img/qq.png">static/img/qq.png</a></li>
+<li class="file-item"><a href="static/img/background2.jpg">static/img/background2.jpg</a></li>
+<li class="file-item"><a href="static/img/i1-2.png">static/img/i1-2.png</a></li>
+<li class="file-item"><a href="static/js/script.js">static/js/script.js</a></li>
+<li class="file-item"><a href="static/js/time.js">static/js/time.js</a></li>
+<li class="file-item"><a href="static/svg/snake-Dark.svg">static/svg/snake-Dark.svg</a></li>
+<li class="file-item"><a href="static/svg/skillWap.svg">static/svg/skillWap.svg</a></li>
+<li class="file-item"><a href="static/svg/skillPc.svg">static/svg/skillPc.svg</a></li>
+<li class="file-item"><a href="static/svg/snake-Light.svg">static/svg/snake-Light.svg</a></li>
+<li class="file-item"><a href="static/css/style.css">static/css/style.css</a></li>
+<li class="file-item"><a href="static/css/theme.css">static/css/theme.css</a></li>
+<li class="file-item"><a href="index.html">index.html</a></li>
+<li class="file-item"><a href="font-family/zk.ttf">font-family/zk.ttf</a></li>
+<li class="file-item"><a href="font-family/DS-DIGI.TTF">font-family/DS-DIGI.TTF</a></li>
+<li class="file-item"><a href="520.html">520.html</a></li>
+<li class="file-item"><a href="leg.html">leg.html</a></li>
+<li class="file-item"><a href="love/index.html">love/index.html</a></li>
+<li class="file-item"><a href="gt/get.html">gt/get.html</a></li>
+<li class="file-item"><a href="gt/Style1.css">gt/Style1.css</a></li>
+<li class="file-item"><a href="gt/脑瘫.mp3">gt/脑瘫.mp3</a></li>
+<li class="file-item"><a href="gt/ljh.html">gt/ljh.html</a></li>
+<li class="file-item"><a href="gt/index.html">gt/index.html</a></li>
+<li class="file-item"><a href="gt/assets/sass/layout/_main.scss">gt/assets/sass/layout/_main.scss</a></li>
+<li class="file-item"><a href="gt/assets/sass/layout/_header.scss">gt/assets/sass/layout/_header.scss</a></li>
+<li class="file-item"><a href="gt/assets/sass/layout/_footer.scss">gt/assets/sass/layout/_footer.scss</a></li>
+<li class="file-item"><a href="gt/assets/sass/layout/_bg.scss">gt/assets/sass/layout/_bg.scss</a></li>
+<li class="file-item"><a href="gt/assets/sass/layout/_wrapper.scss">gt/assets/sass/layout/_wrapper.scss</a></li>
+<li class="file-item"><a href="gt/assets/sass/base/_page.scss">gt/assets/sass/base/_page.scss</a></li>
+<li class="file-item"><a href="gt/assets/sass/base/_typography.scss">gt/assets/sass/base/_typography.scss</a></li>
+<li class="file-item"><a href="gt/assets/sass/base/_reset.scss">gt/assets/sass/base/_reset.scss</a></li>
+<li class="file-item"><a href="gt/assets/sass/libs/_breakpoints.scss">gt/assets/sass/libs/_breakpoints.scss</a></li>
+<li class="file-item"><a href="gt/assets/sass/libs/_mixins.scss">gt/assets/sass/libs/_mixins.scss</a></li>
+<li class="file-item"><a href="gt/assets/sass/libs/_vendor.scss">gt/assets/sass/libs/_vendor.scss</a></li>
+<li class="file-item"><a href="gt/assets/sass/libs/_functions.scss">gt/assets/sass/libs/_functions.scss</a></li>
+<li class="file-item"><a href="gt/assets/sass/libs/_vars.scss">gt/assets/sass/libs/_vars.scss</a></li>
+<li class="file-item"><a href="gt/assets/sass/components/_list.scss">gt/assets/sass/components/_list.scss</a></li>
+<li class="file-item"><a href="gt/assets/sass/components/_box.scss">gt/assets/sass/components/_box.scss</a></li>
+<li class="file-item"><a href="gt/assets/sass/components/_icon.scss">gt/assets/sass/components/_icon.scss</a></li>
+<li class="file-item"><a href="gt/assets/sass/components/_form.scss">gt/assets/sass/components/_form.scss</a></li>
+<li class="file-item"><a href="gt/assets/sass/components/_button.scss">gt/assets/sass/components/_button.scss</a></li>
+<li class="file-item"><a href="gt/assets/sass/components/_table.scss">gt/assets/sass/components/_table.scss</a></li>
+<li class="file-item"><a href="gt/assets/sass/components/_icons.scss">gt/assets/sass/components/_icons.scss</a></li>
+<li class="file-item"><a href="gt/assets/sass/components/_actions.scss">gt/assets/sass/components/_actions.scss</a></li>
+<li class="file-item"><a href="gt/assets/sass/components/_image.scss">gt/assets/sass/components/_image.scss</a></li>
+<li class="file-item"><a href="gt/assets/sass/main.scss">gt/assets/sass/main.scss</a></li>
+<li class="file-item"><a href="gt/assets/sass/noscript.scss">gt/assets/sass/noscript.scss</a></li>
+<li class="file-item"><a href="gt/assets/js/util.js">gt/assets/js/util.js</a></li>
+<li class="file-item"><a href="gt/assets/js/main.js">gt/assets/js/main.js</a></li>
+<li class="file-item"><a href="gt/assets/js/jquery.min.js">gt/assets/js/jquery.min.js</a></li>
+<li class="file-item"><a href="gt/assets/js/time.js">gt/assets/js/time.js</a></li>
+<li class="file-item"><a href="gt/assets/js/breakpoints.min.js">gt/assets/js/breakpoints.min.js</a></li>
+<li class="file-item"><a href="gt/assets/js/browser.min.js">gt/assets/js/browser.min.js</a></li>
+<li class="file-item"><a href="gt/assets/webfonts/fa-regular-400.eot">gt/assets/webfonts/fa-regular-400.eot</a></li>
+<li class="file-item"><a href="gt/assets/webfonts/fa-regular-400.svg">gt/assets/webfonts/fa-regular-400.svg</a></li>
+<li class="file-item"><a href="gt/assets/webfonts/fa-regular-400.woff2">gt/assets/webfonts/fa-regular-400.woff2</a></li>
+<li class="file-item"><a href="gt/assets/webfonts/fa-regular-400.woff">gt/assets/webfonts/fa-regular-400.woff</a></li>
+<li class="file-item"><a href="gt/assets/webfonts/fa-brands-400.ttf">gt/assets/webfonts/fa-brands-400.ttf</a></li>
+<li class="file-item"><a href="gt/assets/webfonts/fa-brands-400.woff2">gt/assets/webfonts/fa-brands-400.woff2</a></li>
+<li class="file-item"><a href="gt/assets/webfonts/fa-brands-400.eot">gt/assets/webfonts/fa-brands-400.eot</a></li>
+<li class="file-item"><a href="gt/assets/webfonts/fa-solid-900.woff">gt/assets/webfonts/fa-solid-900.woff</a></li>
+<li class="file-item"><a href="gt/assets/webfonts/fa-regular-400.ttf">gt/assets/webfonts/fa-regular-400.ttf</a></li>
+<li class="file-item"><a href="gt/assets/webfonts/fa-solid-900.svg">gt/assets/webfonts/fa-solid-900.svg</a></li>
+<li class="file-item"><a href="gt/assets/webfonts/fa-solid-900.woff2">gt/assets/webfonts/fa-solid-900.woff2</a></li>
+<li class="file-item"><a href="gt/assets/webfonts/fa-solid-900.eot">gt/assets/webfonts/fa-solid-900.eot</a></li>
+<li class="file-item"><a href="gt/assets/webfonts/fa-solid-900.ttf">gt/assets/webfonts/fa-solid-900.ttf</a></li>
+<li class="file-item"><a href="gt/assets/webfonts/fa-brands-400.woff">gt/assets/webfonts/fa-brands-400.woff</a></li>
+<li class="file-item"><a href="gt/assets/webfonts/fa-brands-400.svg">gt/assets/webfonts/fa-brands-400.svg</a></li>
+<li class="file-item"><a href="gt/assets/css/noscript.css">gt/assets/css/noscript.css</a></li>
+<li class="file-item"><a href="gt/assets/css/main.css">gt/assets/css/main.css</a></li>
+<li class="file-item"><a href="gt/assets/css/fontawesome-all.min.css">gt/assets/css/fontawesome-all.min.css</a></li>
+<li class="file-item"><a href="gt/怪.mp3">gt/怪.mp3</a></li>
+<li class="file-item"><a href="gt/Login.html">gt/Login.html</a></li>
+<li class="file-item"><a href="gt/gt.html">gt/gt.html</a></li>
+<li class="file-item"><a href="gt/look.html">gt/look.html</a></li>
+<li class="file-item"><a href="gt/eg.jpg">gt/eg.jpg</a></li>
+<li class="file-item"><a href="gt/eg.html">gt/eg.html</a></li>
+<li class="file-item"><a href="gt/images/gt2.jpg">gt/images/gt2.jpg</a></li>
+<li class="file-item"><a href="gt/images/gt11.jpg">gt/images/gt11.jpg</a></li>
+<li class="file-item"><a href="gt/images/gt4.jpg">gt/images/gt4.jpg</a></li>
+<li class="file-item"><a href="gt/images/gt13.jpg">gt/images/gt13.jpg</a></li>
+<li class="file-item"><a href="gt/images/GT-wallpaper.jpg">gt/images/GT-wallpaper.jpg</a></li>
+<li class="file-item"><a href="gt/images/gt (1).jpg">gt/images/gt (1).jpg</a></li>
+<li class="file-item"><a href="gt/images/bg.jpg">gt/images/bg.jpg</a></li>
+<li class="file-item"><a href="gt/images/favicon.ico">gt/images/favicon.ico</a></li>
+<li class="file-item"><a href="gt/images/gtlogo.jpg">gt/images/gtlogo.jpg</a></li>
+<li class="file-item"><a href="gt/images/gt9.jpg">gt/images/gt9.jpg</a></li>
+<li class="file-item"><a href="gt/images/pic02.jpg">gt/images/pic02.jpg</a></li>
+<li class="file-item"><a href="gt/images/pic01.jpg">gt/images/pic01.jpg</a></li>
+<li class="file-item"><a href="gt/images/gt3.jpg">gt/images/gt3.jpg</a></li>
+<li class="file-item"><a href="gt/images/gt5.jpg">gt/images/gt5.jpg</a></li>
+<li class="file-item"><a href="gt/images/gt (6).jpg">gt/images/gt (6).jpg</a></li>
+<li class="file-item"><a href="gt/images/gt7.jpg">gt/images/gt7.jpg</a></li>
+<li class="file-item"><a href="gt/images/overlay.png">gt/images/overlay.png</a></li>
+<li class="file-item"><a href="gt/images/1.jpg">gt/images/1.jpg</a></li>
+<li class="file-item"><a href="gt/images/gt14.jpg">gt/images/gt14.jpg</a></li>
+<li class="file-item"><a href="gt/images/pic03.jpg">gt/images/pic03.jpg</a></li>
+<li class="file-item"><a href="gt/images/gt8.jpg">gt/images/gt8.jpg</a></li>
+<li class="file-item"><a href="gt/images/gt6.jpg">gt/images/gt6.jpg</a></li>
+<li class="file-item"><a href="gt/images/gt12.jpg">gt/images/gt12.jpg</a></li>
+<li class="file-item"><a href="gt/images/gt1.jpg">gt/images/gt1.jpg</a></li>
+<li class="file-item"><a href="gt/10.html">gt/10.html</a></li>
+<li class="file-item"><a href="gt/Login_files/login.css">gt/Login_files/login.css</a></li>
+<li class="file-item"><a href="gt/Login_files/jquery-1.8.0.min.js">gt/Login_files/jquery-1.8.0.min.js</a></li>
+<li class="file-item"><a href="gt/Login_files/VerifyCode.aspx">gt/Login_files/VerifyCode.aspx</a></li>
+<li class="file-item"><a href="gt/Login_files/jiami.js">gt/Login_files/jiami.js</a></li>
+<li class="file-item"><a href="gt/free.html">gt/free.html</a></li>
+<li class="file-item"><a href="gt/old.html">gt/old.html</a></li>
+<li class="file-item"><a href="gt/member.html">gt/member.html</a></li>
+<li class="file-item"><a href="gt/GT.css">gt/GT.css</a></li>
+<li class="file-item"><a href="gt/get_files/easyui-lang-zh_CN(1).js">gt/get_files/easyui-lang-zh_CN(1).js</a></li>
+<li class="file-item"><a href="gt/get_files/checkpwd.js">gt/get_files/checkpwd.js</a></li>
+<li class="file-item"><a href="gt/get_files/icon.css">gt/get_files/icon.css</a></li>
+<li class="file-item"><a href="gt/get_files/jquery.showLoading.js">gt/get_files/jquery.showLoading.js</a></li>
+<li class="file-item"><a href="gt/get_files/jquery-1.8.0.min.js">gt/get_files/jquery-1.8.0.min.js</a></li>
+<li class="file-item"><a href="gt/get_files/showLoading.css">gt/get_files/showLoading.css</a></li>
+<li class="file-item"><a href="gt/get_files/easyui.css">gt/get_files/easyui.css</a></li>
+<li class="file-item"><a href="gt/get_files/jquery.easyui.min.js">gt/get_files/jquery.easyui.min.js</a></li>
+<li class="file-item"><a href="gt/genshin-icon.ttf">gt/genshin-icon.ttf</a></li>
+<li class="file-item"><a href="gt/main.html">gt/main.html</a></li>
+<li class="file-item"><a href="gt/read.html">gt/read.html</a></li>
+<li class="file-item"><a href="gt/eg.png">gt/eg.png</a></li>
+<li class="file-item"><a href="font/iconfont.ttf">font/iconfont.ttf</a></li>
+<li class="file-item"><a href="font/iconfont.css">font/iconfont.css</a></li>
+<li class="file-item"><a href="font/iconfont.js">font/iconfont.js</a></li>
+<li class="file-item"><a href="font/demo.css">font/demo.css</a></li>
+<li class="file-item"><a href="font/demo_index.html">font/demo_index.html</a></li>
+<li class="file-item"><a href="font/iconfont.json">font/iconfont.json</a></li>
+<li class="file-item"><a href="old/index.html">old/index.html</a></li>
+<li class="file-item"><a href="old/assets/瞬间的永恒v1背景音乐.mp3">old/assets/瞬间的永恒v1背景音乐.mp3</a></li>
+<li class="file-item"><a href="old/assets/js/time.js">old/assets/js/time.js</a></li>
+<li class="file-item"><a href="old/assets/银河赴约.mp3">old/assets/银河赴约.mp3</a></li>
+<li class="file-item"><a href="old/assets/css/style-starter.css">old/assets/css/style-starter.css</a></li>
+<li class="file-item"><a href="old/love.html">old/love.html</a></li>
+<li class="file-item"><a href="old/xz.html">old/xz.html</a></li>
+<li class="file-item"><a href="old/face.webp">old/face.webp</a></li>
     </ul>
-</body> 
+</body>
 </html>
-EOF 
+ 
