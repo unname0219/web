@@ -1,18 +1,18 @@
-name: Generate Index HTML 
- 
+name: Generate Index HTML
+
 on:
   push:
     branches: [ "main" ]
- 
+
 jobs:
   generate-index:
-    runs-on: ubuntu-latest 
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4 
-      
-      - name: Generate supindex.html 
+      - uses: actions/checkout@v4
+
+      - name: Generate supindex.html
         run: |
-          cat << EOF > supindex.html 
+          cat << EOF > supindex.html
           <!DOCTYPE html>
           <html lang="en">
           <head>
@@ -25,9 +25,8 @@ jobs:
                       --text-color: #c9d1d9;
                       --border-color: #30363d;
                       --link-color: #58a6ff;
-                      --indent-size: 1rem;
                   }
- 
+
                   body {
                       background-color: var(--bg-color);
                       color: var(--text-color);
@@ -36,79 +35,56 @@ jobs:
                       max-width: 800px;
                       padding: 0 20px;
                   }
- 
+
                   .file-list {
                       border: 1px solid var(--border-color);
                       border-radius: 6px;
                       list-style: none;
                       padding: 0;
-                      overflow-x: auto; /* 解决水平溢出 */
                   }
- 
+
                   .file-item {
                       padding: 8px 16px;
                       border-bottom: 1px solid var(--border-color);
                       display: flex;
                       align-items: center;
-                      position: relative;
                   }
- 
+
                   .file-item:last-child {
                       border-bottom: none;
                   }
- 
+
                   .file-item a {
                       color: var(--link-color);
                       text-decoration: none;
                       margin-left: 8px;
-                      white-space: nowrap; /* 防止文字换行 */
-                      overflow: hidden;
-                      text-overflow: ellipsis; /* 显示省略号 */
-                      max-width: calc(100% - 100px);
                   }
- 
+
                   .file-item a:hover {
                       text-decoration: underline;
                   }
- 
+
                   .icon {
                       width: 16px;
                       height: 16px;
                       fill: currentColor;
                       margin-right: 8px;
                   }
- 
-                  /* 缩进样式 */
-                  .file-item.level-1 { padding-left: var(--indent-size); }
-                  .file-item.level-2 { padding-left: calc(var(--indent-size) * 2); }
-                  .file-item.level-3 { padding-left: calc(var(--indent-size) * 3); }
-                  .file-item.level-4 { padding-left: calc(var(--indent-size) * 4); }
               </style>
           </head>
           <body>
               <h1>Files Index</h1>
               <ul class="file-list">
-                  $$$(find . -type f ! - './path.git/*' ! -name 'supindex.html' ! -name '.gitignore' ! -name 'LICENSE' ! -name 'README.md' ! -path './.github/*' | 
-                    while read file; do 
-                      level=\$$(echo "\$$$file" | grep -o '/' | wc -l);
-                      case "\$$(echo "\$$$file" | grep -o '\.[^.]*$$')" in 
-                        md) icon='📝';;
-                        html) icon='🌐';;
-                        js) icon='🔧';;
-                        py) icon='🐍';;
-                        *) icon='📄';;
-                      esac;
-                      printf '<li class="file-item level-%s"><span style="color:%s">%s</span><a href="%s">%s</a></li>\n' "\$$$level" "#$$(echo "\$$$file" | md5sum | cut -d' ' -f1)" "\$$icon" "\$$$file" "\$$file";
-                    done)
+                  $(find . -type f ! -path './.git/*' ! -name 'supindex.html' ! -name '.gitignore' ! -name 'LICENSE' ! -name 'README.md' ! -path './.github/*' -printf '<li class="file-item"><svg class="icon" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M3.75 1.5a.25.25 0 00-.25.25v11.5c0 .138.112.25.25.25h8.5a.25.25 0 00.25-.25V6H9.75A1.75 1.75 0 018 4.25V1.5H3.75zm5.75.56v2.19c0 .138.112.25.25.25h2.19L9.5 2.06zM2 1.75C2 .784 2.784 0 3.75 0h5.086c.464 0 .909.184 1.237.513l3.414 3.414c.329.328.513.773.513 1.237v8.086A1.75 1.75 0 0112.25 15h-8.5A1.75 1.75 0 012 13.25V1.75z"></path></svg><a href="%P">%P</a></li>\n')
               </ul>
           </body>
           </html>
-          EOF 
- 
-      - name: Commit and push 
+          EOF
+
+      - name: Commit and push
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
-          git add supindex.html 
+          git add supindex.html
           git commit -m "Auto-generated index file" || echo "No changes to commit"
           git push
