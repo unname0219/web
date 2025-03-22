@@ -36,64 +36,43 @@ jobs:
                       padding: 0 20px;
                   }
 
-                  #search {
-                      width: 100%;
-                      padding: 8px;
-                      margin-bottom: 16px;
-                      background: var(--bg-color);
-                      border: 1px solid var(--border-color);
-                      color: var(--text-color);
-                      border-radius: 6px;
-                  }
-
-                  .tree {
+                  .file-list {
                       border: 1px solid var(--border-color);
                       border-radius: 6px;
-                      padding: 8px;
-                  }
-
-                  .folder {
                       list-style: none;
-                      padding-left: 20px;
-                  }
-
-                  .folder-item {
-                      margin: 4px 0;
-                      cursor: pointer;
-                      position: relative;
-                  }
-
-                  .folder-item::before {
-                      content: '▶';
-                      position: absolute;
-                      left: -15px;
-                      color: var(--text-color);
-                      font-size: 0.8em;
-                  }
-
-                  .folder-item.open::before {
-                      content: '▼';
+                      padding: 0;
                   }
 
                   .file-item {
+                      padding: 8px 16px;
+                      border-bottom: 1px solid var(--border-color);
                       display: flex;
                       align-items: center;
-                      padding: 4px 0;
+                  }
+
+                  .file-item:last-child {
+                      border-bottom: none;
+                  }
+
+                  .file-item a {
+                      color: var(--link-color);
+                      text-decoration: none;
+                      margin-left: 8px;
+                  }
+
+                  .file-item a:hover {
+                      text-decoration: underline;
                   }
 
                   .icon-container {
                       width: 16px;
                       height: 16px;
-                      margin-right: 8px;
+                      display: inline-block;
                   }
 
-                  a {
-                      color: var(--link-color);
-                      text-decoration: none;
-                  }
-
-                  a:hover {
-                      text-decoration: underline;
+                  .icon {
+                      width: 100%;
+                      height: 100%;
                   }
               </style>
               <svg style="display: none;">
@@ -104,8 +83,7 @@ jobs:
           </head>
           <body>
               <h1>All Web Files Index</h1>
-              <input type="text" id="search" placeholder="Search files...">
-              <div class="tree">
+              <ul class="file-list">
                   $(find . -type f \
                   ! -path './.git/*' \
                   ! -name 'supindex.html' \
@@ -113,64 +91,8 @@ jobs:
                   ! -name '.gitignore' \
                   ! -name 'LICENSE' \
                   ! -name 'README.md' \
-                  -printf '%P\n' | awk '
-                  BEGIN { print "<ul class=\"folder\">" }
-                  {
-                      split($0, parts, "/")
-                      path = ""
-                      for (i=1; i<=length(parts); i++) {
-                          if (i == length(parts)) {
-                              printf "%s<li class=\"file-item\"><div class=\"icon-container\"><svg class=\"icon\"><use xlink:href=\"#icon-file\"/></svg></div><a href=\"%s\">%s</a></li>\n", 
-                                  indent, $0, parts[i]
-                          } else {
-                              if (!seen[parts[i]]) {
-                                  printf "%s<li class=\"folder-item\"><span>%s</span><ul class=\"folder\">\n", 
-                                      indent, parts[i]
-                                  indent = indent "  "
-                                  seen[parts[i]] = 1
-                              }
-                          }
-                      }
-                  }
-                  END { print "</ul>" }')
-              </div>
-
-              <script>
-                  // 文件夹展开/折叠功能
-                  document.querySelectorAll('.folder-item').forEach(item => {
-                      item.addEventListener('click', (e) => {
-                          if (e.target.tagName === 'A') return;
-                          const ul = item.querySelector('ul');
-                          if (ul) {
-                              item.classList.toggle('open');
-                              ul.style.display = ul.style.display === 'none' ? 'block' : 'none';
-                          }
-                      });
-                  });
-
-                  // 搜索功能
-                  document.getElementById('search').addEventListener('input', (e) => {
-                      const searchTerm = e.target.value.toLowerCase();
-                      document.querySelectorAll('.file-item').forEach(item => {
-                          const text = item.textContent.toLowerCase();
-                          const match = text.includes(searchTerm);
-                          item.style.display = match ? 'flex' : 'none';
-                          
-                          // 自动展开父级目录
-                          let parent = item.parentElement;
-                          while (parent && parent.classList.contains('folder')) {
-                              parent.style.display = 'block';
-                              parent.previousElementSibling?.classList?.add('open');
-                              parent = parent.parentElement;
-                          }
-                      });
-                  });
-
-                  // 初始隐藏所有子目录
-                  document.querySelectorAll('.folder > .folder').forEach(ul => {
-                      ul.style.display = 'none';
-                  });
-              </script>
+                  -printf '<li class="file-item"><div class="icon-container"><svg class="icon"><use xlink:href="#icon-file"/></svg></div><a href="%P">%P</a></li>\n')
+              </ul>
           </body>
           </html>
           EOF
