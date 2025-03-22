@@ -1,38 +1,38 @@
-<!DOCTYPE html>
+<！doctype html>
 <html>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv= = ” text/html; charset = utf-8“/>"Content-Type" content
 <head>
-    <title>新年不快乐！</title>
+    <title>！</title>
 </head>
 <body>
-<canvas id="canvas"></canvas>
+<canvas id ="canvas"></canvas>
 <style type="text/css">
     body {
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
+        margin：0  ;
+        padding：0 ;
+        overflow：hidden；
     }
 </style>
 <script type="text/javascript">
-    var canvas = document.getElementById('canvas');
-    var ctx = canvas.getContext('2d');
+    var canvas =document。 ;getElementById('canvas')
+    var ctx =canvas。 ;getContext('2d')
 
 
-    canvas.height = window.innerHeight;
-    canvas.width = window.innerWidth;
+    =window。innerHeight
+    canvas。width=window。innerWidth；
 
-    var texts = '给我去做寒假作业'.split('');
+    var texts ='给我去做寒假作业'。 ;split('')
 
-    var fontSize = 16;
-    var columns = canvas.width / fontSize;
+    var fontSize =16 ;
+    var columns=canvas。width/fontSize;
     // 用于计算输出文字时坐标，所以长度即为列数
-    var drops = [];
+    var drops = ;[]
     //初始值
-    for (var x = 0; x < columns; x++) {
-        drops[x] = 1;
+    对于 （var  x   =0 ;x <列= x ;）{
+        滴[  x  ]   = 1 ;
     }
 
-    function draw() {
+    函数（绘制（）{
         //让背景逐渐由透明到不透明
         ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
