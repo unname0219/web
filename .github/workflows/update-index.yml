@@ -1,23 +1,30 @@
-name: Generate Index HTML
-
+name: Generate Index HTML 
+ 
 on:
   push:
     branches: [ "main" ]
-
+ 
 jobs:
   generate-index:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest 
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Generate supindex.html
+      - uses: actions/checkout@v4 
+ 
+      - name: Generate supindex.html 
         run: |
-          cat << EOF > supindex.html
+          cat << EOF > supindex.html 
           <!DOCTYPE html>
           <html lang="en">
           <head>
               <meta charset="UTF-8">
               <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <!-- 添加适应手机的 meta 标签 -->
+              <meta name="mobile-web-app-capable" content="yes">
+              <meta name="apple-mobile-web-app-capable" content="yes">
+              <meta name="apple-touch-fullscreen" content="yes">
+              <meta name="apple-touch-icon-precomposed" content="apple-touch-icon.png">
+              <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+              <meta name="theme-color" content="#0d1117">
               <title>Web Index</title>
               <style>
                   :root {
@@ -26,7 +33,7 @@ jobs:
                       --border-color: #30363d;
                       --link-color: #58a6ff;
                   }
-
+ 
                   body {
                       background-color: var(--bg-color);
                       color: var(--text-color);
@@ -35,35 +42,35 @@ jobs:
                       max-width: 800px;
                       padding: 0 20px;
                   }
-
+ 
                   .file-list {
                       border: 1px solid var(--border-color);
                       border-radius: 6px;
                       list-style: none;
                       padding: 0;
                   }
-
+ 
                   .file-item {
                       padding: 8px 16px;
                       border-bottom: 1px solid var(--border-color);
                       display: flex;
                       align-items: center;
                   }
-
+ 
                   .file-item:last-child {
                       border-bottom: none;
                   }
-
+ 
                   .file-item a {
                       color: var(--link-color);
                       text-decoration: none;
                       margin-left: 8px;
                   }
-
+ 
                   .file-item a:hover {
                       text-decoration: underline;
                   }
-
+ 
                   .icon {
                       width: 16px;
                       height: 16px;
@@ -79,12 +86,12 @@ jobs:
               </ul>
           </body>
           </html>
-          EOF
-
-      - name: Commit and push
+          EOF 
+ 
+      - name: Commit and push 
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
-          git add supindex.html
+          git add supindex.html 
           git commit -m "Auto-generated index file" || echo "No changes to commit"
           git push
