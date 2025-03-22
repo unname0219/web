@@ -1,28 +1,89 @@
-name: Auto Update Index
+name: Generate Index HTML
 
 on:
   push:
-    branches: [ "main" ]  # 在 main 分支推送时触发
-  schedule:
-    - cron: '0 0 * * *'   # 每天 UTC 时间 0 点自动运行
+    branches: [ "main" ]
 
 jobs:
   generate-index:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.x'
-
-      - name: Generate sindex.html
+      - name: Generate supindex.html
         run: |
-          python generate_index.py
+          cat << EOF > supindex.html
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Repository Index</title>
+              <style>
+                  :root {
+                      --bg-color: #0d1117;
+                      --text-color: #c9d1d9;
+                      --border-color: #30363d;
+                      --link-color: #58a6ff;
+                  }
+
+                  body {
+                      background-color: var(--bg-color);
+                      color: var(--text-color);
+                      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+                      margin: 2em auto;
+                      max-width: 800px;
+                      padding: 0 20px;
+                  }
+
+                  .file-list {
+                      border: 1px solid var(--border-color);
+                      border-radius: 6px;
+                      list-style: none;
+                      padding: 0;
+                  }
+
+                  .file-item {
+                      padding: 8px 16px;
+                      border-bottom: 1px solid var(--border-color);
+                      display: flex;
+                      align-items: center;
+                  }
+
+                  .file-item:last-child {
+                      border-bottom: none;
+                  }
+
+                  .file-item a {
+                      color: var(--link-color);
+                      text-decoration: none;
+                      margin-left: 8px;
+                  }
+
+                  .file-item a:hover {
+                      text-decoration: underline;
+                  }
+
+                  .icon {
+                      width: 16px;
+                      height: 16px;
+                      fill: currentColor;
+                  }
+              </style>
+          </head>
+          <body>
+              <h1>Repository Files</h1>
+              <ul class="file-list">
+                  $(find . -type f ! -path './.git/*' ! -name 'supindex.html' ! -name '.gitignore' ! -name 'LICENSE' ! -name 'README.md' ! -path './.github/*' -printf '<li class="file-item"><svg class="icon" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M3.75 1.5a.25.25 0 00-.25.25v11.5c0 .138.112.25.25.25h8.5a.25.25 0 00.25-.25V6H9.75A1.75 1.75 0 018 4.25V1.5H3.75zm5.75.56v2.19c0 .138.112.25.25.25h2.19L9.5 2.06zM2 1.75C2 .784 2.784 0 3.75 0h5.086c.464 0 .909.184 1.237.513l3.414 3.414c.329.328.513.773.513 1.237v8.086A1.75 1.75 0 0112.25 15h-8.5A1.75 1.75 0 012 13.25V1.75z"></path></svg><a href="%P">%P</a></li>\n')
+              </ul>
+          </body>
+          </html>
+          EOF
+
+      - name: Commit and push
+        run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
-          git add sindex.html
-          git commit -m "Auto-update sindex.html"
+          git add supindex.html
+          git commit -m "Auto-generated index file" || echo "No changes to commit"
           git push
