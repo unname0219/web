@@ -12,13 +12,13 @@ jobs:
 
       - name: Generate supindex.html
         run: |
-          cat << EOF > supindex.html
+          cat << "EOF" > supindex.html
           <!DOCTYPE html>
           <html lang="en">
           <head>
               <meta charset="UTF-8">
               <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <title>Repository Index</title>
+              <title>Web Files Index</title>
               <style>
                   :root {
                       --bg-color: #0d1117;
@@ -36,46 +36,141 @@ jobs:
                       padding: 0 20px;
                   }
 
-                  .file-list {
+                  #search {
+                      width: 100%;
+                      padding: 8px;
+                      margin-bottom: 16px;
+                      background: var(--bg-color);
+                      border: 1px solid var(--border-color);
+                      color: var(--text-color);
+                      border-radius: 6px;
+                  }
+
+                  .tree {
                       border: 1px solid var(--border-color);
                       border-radius: 6px;
+                      padding: 8px;
+                  }
+
+                  .folder {
                       list-style: none;
-                      padding: 0;
+                      padding-left: 20px;
+                  }
+
+                  .folder-item {
+                      margin: 4px 0;
+                      cursor: pointer;
+                      position: relative;
+                  }
+
+                  .folder-item::before {
+                      content: '▶';
+                      position: absolute;
+                      left: -15px;
+                      color: var(--text-color);
+                      font-size: 0.8em;
+                  }
+
+                  .folder-item.open::before {
+                      content: '▼';
                   }
 
                   .file-item {
-                      padding: 8px 16px;
-                      border-bottom: 1px solid var(--border-color);
                       display: flex;
                       align-items: center;
+                      padding: 4px 0;
                   }
 
-                  .file-item:last-child {
-                      border-bottom: none;
-                  }
-
-                  .file-item a {
-                      color: var(--link-color);
-                      text-decoration: none;
-                      margin-left: 8px;
-                  }
-
-                  .file-item a:hover {
-                      text-decoration: underline;
-                  }
-
-                  .icon {
+                  .icon-container {
                       width: 16px;
                       height: 16px;
-                      fill: currentColor;
+                      margin-right: 8px;
+                  }
+
+                  a {
+                      color: var(--link-color);
+                      text-decoration: none;
+                  }
+
+                  a:hover {
+                      text-decoration: underline;
                   }
               </style>
+              <svg style="display: none;">
+                  <symbol id="icon-file" viewBox="0 0 16 16">
+                      <path fill-rule="evenodd" d="M3.75 1.5a.25.25 0 00-.25.25v11.5c0 .138.112.25.25.25h8.5a.25.25 0 00.25-.25V6H9.75A1.75 1.75 0 018 4.25V1.5H3.75zm5.75.56v2.19c0 .138.112.25.25.25h2.19L9.5 2.06zM2 1.75C2 .784 2.784 0 3.75 0h5.086c.464 0 .909.184 1.237.513l3.414 3.414c.329.328.513.773.513 1.237v8.086A1.75 1.75 0 0112.25 15h-8.5A1.75 1.75 0 012 13.25V1.75z"/>
+                  </symbol>
+              </svg>
           </head>
           <body>
-              <h1>Repository Files</h1>
-              <ul class="file-list">
-                  $(find . -type f ! -path './.git/*' ! -name 'supindex.html' ! -name '.gitignore' ! -name 'LICENSE' ! -name 'README.md' ! -path './.github/*' -printf '<li class="file-item"><svg class="icon" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M3.75 1.5a.25.25 0 00-.25.25v11.5c0 .138.112.25.25.25h8.5a.25.25 0 00.25-.25V6H9.75A1.75 1.75 0 018 4.25V1.5H3.75zm5.75.56v2.19c0 .138.112.25.25.25h2.19L9.5 2.06zM2 1.75C2 .784 2.784 0 3.75 0h5.086c.464 0 .909.184 1.237.513l3.414 3.414c.329.328.513.773.513 1.237v8.086A1.75 1.75 0 0112.25 15h-8.5A1.75 1.75 0 012 13.25V1.75z"></path></svg><a href="%P">%P</a></li>\n')
-              </ul>
+              <h1>All Web Files Index</h1>
+              <input type="text" id="search" placeholder="Search files...">
+              <div class="tree">
+                  $(find . -type f \
+                  ! -path './.git/*' \
+                  ! -name 'supindex.html' \
+                  ! -path './.github/*' \
+                  ! -name '.gitignore' \
+                  ! -name 'LICENSE' \
+                  ! -name 'README.md' \
+                  -printf '%P\n' | awk '
+                  BEGIN { print "<ul class=\"folder\">" }
+                  {
+                      split($0, parts, "/")
+                      path = ""
+                      for (i=1; i<=length(parts); i++) {
+                          if (i == length(parts)) {
+                              printf "%s<li class=\"file-item\"><div class=\"icon-container\"><svg class=\"icon\"><use xlink:href=\"#icon-file\"/></svg></div><a href=\"%s\">%s</a></li>\n", 
+                                  indent, $0, parts[i]
+                          } else {
+                              if (!seen[parts[i]]) {
+                                  printf "%s<li class=\"folder-item\"><span>%s</span><ul class=\"folder\">\n", 
+                                      indent, parts[i]
+                                  indent = indent "  "
+                                  seen[parts[i]] = 1
+                              }
+                          }
+                      }
+                  }
+                  END { print "</ul>" }')
+              </div>
+
+              <script>
+                  // 文件夹展开/折叠功能
+                  document.querySelectorAll('.folder-item').forEach(item => {
+                      item.addEventListener('click', (e) => {
+                          if (e.target.tagName === 'A') return;
+                          const ul = item.querySelector('ul');
+                          if (ul) {
+                              item.classList.toggle('open');
+                              ul.style.display = ul.style.display === 'none' ? 'block' : 'none';
+                          }
+                      });
+                  });
+
+                  // 搜索功能
+                  document.getElementById('search').addEventListener('input', (e) => {
+                      const searchTerm = e.target.value.toLowerCase();
+                      document.querySelectorAll('.file-item').forEach(item => {
+                          const text = item.textContent.toLowerCase();
+                          const match = text.includes(searchTerm);
+                          item.style.display = match ? 'flex' : 'none';
+                          
+                          // 自动展开父级目录
+                          let parent = item.parentElement;
+                          while (parent && parent.classList.contains('folder')) {
+                              parent.style.display = 'block';
+                              parent.previousElementSibling?.classList?.add('open');
+                              parent = parent.parentElement;
+                          }
+                      });
+                  });
+
+                  // 初始隐藏所有子目录
+                  document.querySelectorAll('.folder > .folder').forEach(ul => {
+                      ul.style.display = 'none';
+                  });
+              </script>
           </body>
           </html>
           EOF
