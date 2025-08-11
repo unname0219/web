@@ -1,11 +1,161 @@
-<script src="//api.busuanzi.cc/static/3.6.9/busuanzi.min.js" defer></script>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>访问统计</title>
+    <style>
+        /* 基础样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
 
-本站总访问量 <span id="busuanzi_site_pv">加载中...</span> 次
-本站总访客数 <span id="busuanzi_site_uv">加载中...</span> 人
-本页总阅读量 <span id="busuanzi_page_pv">加载中...</span> 次
-本页总访客数 <span id="busuanzi_page_uv">加载中...</span> 人
+        body {
+            padding: 20px;
+            background-color: #f5f7fa;
+        }
 
-本站今日访问量 <span id="busuanzi_today_site_pv">加载中...</span> 次
-本站今日访客数 <span id="busuanzi_today_site_uv">加载中...</span> 人
-本页今日阅读量 <span id="busuanzi_today_page_pv">加载中...</span> 次
-本页今日访客数 <span id="busuanzi_today_page_uv">加载中...</span> 人
+        /* 外层容器 - 实现表格居中 */
+        .stats-outer {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto; /* 水平居中 */
+        }
+
+        /* 表格样式 */
+        .stats-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 12px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .stats-table th,
+        .stats-table td {
+            padding: clamp(10px, 3vw, 15px);
+            text-align: left;
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
+        }
+
+        .stats-table th {
+            background: rgba(135, 206, 235, 0.8); /* 天蓝色标题背景 */
+            font-weight: 600;
+            color: #333;
+            border-bottom: 1px solid rgba(100, 180, 220, 0.3);
+        }
+
+        .stats-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .stats-table td {
+            border-bottom: 1px solid rgba(200, 200, 200, 0.2);
+            color: #555;
+        }
+
+        .stats-table tr:hover td {
+            background: rgba(255, 255, 255, 0.5);
+            transition: background 0.3s ease;
+        }
+
+        /* 圆角处理 */
+        .stats-table thead tr:first-child th:first-child {
+            border-radius: 12px 0 0 0;
+        }
+
+        .stats-table thead tr:first-child th:last-child {
+            border-radius: 0 12px 0 0;
+        }
+
+        .stats-table tbody tr:last-child td:first-child {
+            border-radius: 0 0 0 12px;
+        }
+
+        .stats-table tbody tr:last-child td:last-child {
+            border-radius: 0 0 12px 0;
+        }
+
+        /* 统计数值样式 */
+        .stats-value {
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        /* 加载状态样式 */
+        .loading {
+            color: #999;
+            font-style: italic;
+        }
+
+        /* 手机端适配 */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px 5px;
+            }
+
+            .stats-table th,
+            .stats-table td {
+                padding: 8px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 外层容器确保表格居中 -->
+    <div class="stats-outer">
+        <table class="stats-table">
+            <thead>
+                <tr>
+                    <th>统计类型</th>
+                    <th>数值</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>本站总访问量</td>
+                    <td><span id="busuanzi_site_pv" class="stats-value loading">加载中...</span> 次</td>
+                </tr>
+                <tr>
+                    <td>本站总访客数</td>
+                    <td><span id="busuanzi_site_uv" class="stats-value loading">加载中...</span> 人</td>
+                </tr>
+                <tr>
+                    <td>本页总阅读量</td>
+                    <td><span id="busuanzi_page_pv" class="stats-value loading">加载中...</span> 次</td>
+                </tr>
+                <tr>
+                    <td>本页总访客数</td>
+                    <td><span id="busuanzi_page_uv" class="stats-value loading">加载中...</span> 人</td>
+                </tr>
+                <tr>
+                    <td>本站今日访问量</td>
+                    <td><span id="busuanzi_today_site_pv" class="stats-value loading">加载中...</span> 次</td>
+                </tr>
+                <tr>
+                    <td>本站今日访客数</td>
+                    <td><span id="busuanzi_today_site_uv" class="stats-value loading">加载中...</span> 人</td>
+                </tr>
+                <tr>
+                    <td>本页今日阅读量</td>
+                    <td><span id="busuanzi_today_page_pv" class="stats-value loading">加载中...</span> 次</td>
+                </tr>
+                <tr>
+                    <td>本页今日访客数</td>
+                    <td><span id="busuanzi_today_page_uv" class="stats-value loading">加载中...</span> 人</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 不蒜子统计脚本 -->
+    <script src="//api.busuanzi.cc/static/3.6.9/busuanzi.min.js" defer></script>
+</body>
+</html>
