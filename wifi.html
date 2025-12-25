@@ -13,134 +13,58 @@
         }
         
         body {
-            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(135deg, #0c2461, #1e3799, #4a69bd);
-            color: #fff;
+            background-color: #0d1117; /* GitHub深色主题背景色 */
+            color: #c9d1d9; /* GitHub深色主题文字色 */
             padding: 20px;
             overflow-x: hidden;
-            position: relative;
         }
         
-        /* 添加一些背景装饰元素 */
-        .bg-element {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.05);
-            z-index: -1;
-        }
-        
-        .bg-element:nth-child(1) {
-            width: 300px;
-            height: 300px;
-            top: -150px;
-            right: -100px;
-        }
-        
-        .bg-element:nth-child(2) {
-            width: 200px;
-            height: 200px;
-            bottom: 100px;
-            left: -100px;
-        }
-        
-        .bg-element:nth-child(3) {
-            width: 150px;
-            height: 150px;
-            top: 50%;
-            left: 10%;
-        }
-        
-        /* 主内容容器 */
+        /* 主容器 */
         .container {
-            max-width: 1200px;
+            max-width: 800px;
             width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             text-align: center;
-            z-index: 1;
         }
         
-        /* 标题样式 */
-        .title {
-            font-size: 4.5rem;
-            font-weight: 800;
-            margin-bottom: 30px;
-            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            letter-spacing: 2px;
-            background: linear-gradient(to right, #f8ff00, #ff7e5f);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            position: relative;
-            padding: 10px 30px;
-        }
-        
-        .title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 200px;
-            height: 5px;
-            background: linear-gradient(to right, #f8ff00, #ff7e5f);
-            border-radius: 5px;
-        }
-        
-        /* 副标题样式 */
-        .subtitle {
-            font-size: 1.5rem;
-            margin-bottom: 50px;
-            max-width: 800px;
-            line-height: 1.6;
-            color: #dcdde1;
-            font-weight: 300;
-        }
-        
-        /* WiFi图标容器 */
+        /* WiFi图标 */
         .wifi-icon {
             margin: 40px 0;
             position: relative;
         }
         
         .wifi-icon i {
-            font-size: 8rem;
-            color: #4cd137;
-            animation: pulse 2s infinite;
-            filter: drop-shadow(0 0 10px rgba(76, 209, 55, 0.5));
+            font-size: 7rem;
+            color: #58a6ff; /* GitHub蓝色 */
+            opacity: 0.9;
         }
         
-        /* 连接状态指示器 */
-        .connection-status {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(0, 0, 0, 0.2);
-            padding: 15px 30px;
-            border-radius: 50px;
-            margin-top: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(5px);
+        /* 标题样式 */
+        .title {
+            font-size: 3.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #f0f6fc;
+            letter-spacing: -0.5px;
         }
         
-        .status-dot {
-            width: 12px;
-            height: 12px;
-            background-color: #4cd137;
-            border-radius: 50%;
-            margin-right: 10px;
-            animation: blink 2s infinite;
-        }
-        
-        .status-text {
+        /* 副标题 */
+        .subtitle {
             font-size: 1.2rem;
-            color: #dcdde1;
+            max-width: 600px;
+            line-height: 1.6;
+            color: #8b949e;
+            margin-bottom: 40px;
+            font-weight: 400;
         }
         
         /* 底部时间显示 */
@@ -149,12 +73,10 @@
             bottom: 0;
             left: 0;
             width: 100%;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(10px);
+            padding: 16px;
+            background-color: #161b22; /* GitHub深色主题底部色 */
             text-align: center;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            z-index: 10;
+            border-top: 1px solid #30363d; /* GitHub边框色 */
         }
         
         .time-container {
@@ -165,81 +87,52 @@
         }
         
         #current-date, #current-time {
-            font-family: 'Courier New', monospace;
-            font-weight: 600;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
         }
         
         #current-date {
-            font-size: 1.2rem;
-            color: #dcdde1;
-            margin-bottom: 5px;
+            font-size: 0.95rem;
+            color: #8b949e;
+            margin-bottom: 4px;
         }
         
         #current-time {
-            font-size: 2.5rem;
-            letter-spacing: 2px;
-            color: #f8ff00;
-            text-shadow: 0 0 10px rgba(248, 255, 0, 0.3);
+            font-size: 1.8rem;
+            color: #f0f6fc;
+            font-weight: 500;
         }
         
-        /* 动画效果 */
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-        
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+        /* 简约分隔线 */
+        .divider {
+            width: 80px;
+            height: 1px;
+            background-color: #30363d;
+            margin: 30px 0;
         }
         
         /* 响应式设计 */
         @media (max-width: 768px) {
             .title {
-                font-size: 3rem;
-                padding: 10px 15px;
-            }
-            
-            .title::after {
-                width: 150px;
+                font-size: 2.5rem;
             }
             
             .subtitle {
-                font-size: 1.2rem;
-                padding: 0 15px;
+                font-size: 1.1rem;
+                padding: 0 20px;
             }
             
             .wifi-icon i {
-                font-size: 6rem;
+                font-size: 5.5rem;
             }
             
             #current-time {
-                font-size: 2rem;
-            }
-            
-            .connection-status {
-                padding: 12px 20px;
-            }
-            
-            .bg-element:nth-child(1) {
-                width: 200px;
-                height: 200px;
-                top: -100px;
-                right: -80px;
-            }
-            
-            .bg-element:nth-child(2) {
-                width: 150px;
-                height: 150px;
-                bottom: 80px;
-                left: -80px;
+                font-size: 1.5rem;
             }
         }
         
         @media (max-width: 480px) {
             .title {
-                font-size: 2.2rem;
+                font-size: 2rem;
             }
             
             .subtitle {
@@ -247,41 +140,43 @@
             }
             
             .wifi-icon i {
-                font-size: 5rem;
+                font-size: 4.5rem;
             }
             
             #current-time {
-                font-size: 1.6rem;
+                font-size: 1.3rem;
             }
             
             #current-date {
-                font-size: 1rem;
+                font-size: 0.85rem;
             }
+        }
+        
+        /* 简约动画效果 */
+        @keyframes subtle-pulse {
+            0%, 100% { opacity: 0.9; }
+            50% { opacity: 1; }
+        }
+        
+        .wifi-icon i {
+            animation: subtle-pulse 4s infinite ease-in-out;
         }
     </style>
 </head>
 <body>
-    <!-- 背景装饰元素 -->
-    <div class="bg-element"></div>
-    <div class="bg-element"></div>
-    <div class="bg-element"></div>
-    
     <!-- 主内容容器 -->
     <div class="container">
-        <h1 class="title">人民的WiFi</h1>
-        
-        <p class="subtitle">
-            连接你我，服务大众。免费的公共WiFi网络，让信息无界，让沟通无限。随时随地，畅享高速网络，体验数字化生活带来的便捷与乐趣。
-        </p>
-        
         <div class="wifi-icon">
             <i class="fas fa-wifi"></i>
         </div>
         
-        <div class="connection-status">
-            <div class="status-dot"></div>
-            <div class="status-text">已连接 | 信号强度：优秀 | 加密：WPA3</div>
-        </div>
+        <h1 class="title">人民的WiFi</h1>
+        
+        <div class="divider"></div>
+        
+        <p class="subtitle">
+            公共网络服务 · 免费连接 · 便捷访问
+        </p>
     </div>
     
     <!-- 底部时间显示 -->
@@ -301,7 +196,7 @@
             const year = now.getFullYear();
             const month = String(now.getMonth() + 1).padStart(2, '0');
             const day = String(now.getDate()).padStart(2, '0');
-            const weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+            const weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
             const weekday = weekdays[now.getDay()];
             
             // 格式化时间
@@ -310,7 +205,7 @@
             const seconds = String(now.getSeconds()).padStart(2, '0');
             
             // 更新日期显示
-            document.getElementById('current-date').textContent = `${year}年${month}月${day}日 ${weekday}`;
+            document.getElementById('current-date').textContent = `${year}.${month}.${day} ${weekday}`;
             
             // 更新时间显示
             document.getElementById('current-time').textContent = `${hours}:${minutes}:${seconds}`;
@@ -320,29 +215,17 @@
         updateTime();
         setInterval(updateTime, 1000);
         
-        // 添加一些交互效果
+        // 简约交互：点击WiFi图标轻微反馈
         document.querySelector('.wifi-icon').addEventListener('click', function() {
             const icon = this.querySelector('i');
-            icon.style.color = icon.style.color === 'rgb(248, 255, 0)' ? '#4cd137' : '#f8ff00';
             
-            // 短暂动画效果
-            icon.style.transform = 'scale(1.2)';
+            // 轻微的颜色变化
+            icon.style.color = icon.style.color === 'rgb(139, 148, 158)' ? '#58a6ff' : '#8b949e';
+            
+            // 重置颜色
             setTimeout(() => {
-                icon.style.transform = 'scale(1)';
+                icon.style.color = '#58a6ff';
             }, 200);
-        });
-        
-        // 响应窗口大小变化调整背景元素
-        window.addEventListener('resize', function() {
-            const bgElements = document.querySelectorAll('.bg-element');
-            
-            // 在移动设备上减小背景元素大小
-            if (window.innerWidth <= 768) {
-                bgElements.forEach(el => {
-                    el.style.width = Math.min(parseInt(el.style.width) || 150, 200) + 'px';
-                    el.style.height = Math.min(parseInt(el.style.height) || 150, 200) + 'px';
-                });
-            }
         });
     </script>
 </body>
