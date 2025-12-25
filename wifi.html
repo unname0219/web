@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人民的WiFi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #0c2461, #1e3799, #4a69bd);
+            color: #fff;
+            padding: 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* 添加一些背景装饰元素 */
+        .bg-element {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            z-index: -1;
+        }
+        
+        .bg-element:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            top: -150px;
+            right: -100px;
+        }
+        
+        .bg-element:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            bottom: 100px;
+            left: -100px;
+        }
+        
+        .bg-element:nth-child(3) {
+            width: 150px;
+            height: 150px;
+            top: 50%;
+            left: 10%;
+        }
+        
+        /* 主内容容器 */
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            z-index: 1;
+        }
+        
+        /* 标题样式 */
+        .title {
+            font-size: 4.5rem;
+            font-weight: 800;
+            margin-bottom: 30px;
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            letter-spacing: 2px;
+            background: linear-gradient(to right, #f8ff00, #ff7e5f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            padding: 10px 30px;
+        }
+        
+        .title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 5px;
+            background: linear-gradient(to right, #f8ff00, #ff7e5f);
+            border-radius: 5px;
+        }
+        
+        /* 副标题样式 */
+        .subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 50px;
+            max-width: 800px;
+            line-height: 1.6;
+            color: #dcdde1;
+            font-weight: 300;
+        }
+        
+        /* WiFi图标容器 */
+        .wifi-icon {
+            margin: 40px 0;
+            position: relative;
+        }
+        
+        .wifi-icon i {
+            font-size: 8rem;
+            color: #4cd137;
+            animation: pulse 2s infinite;
+            filter: drop-shadow(0 0 10px rgba(76, 209, 55, 0.5));
+        }
+        
+        /* 连接状态指示器 */
+        .connection-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px 30px;
+            border-radius: 50px;
+            margin-top: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+        }
+        
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            background-color: #4cd137;
+            border-radius: 50%;
+            margin-right: 10px;
+            animation: blink 2s infinite;
+        }
+        
+        .status-text {
+            font-size: 1.2rem;
+            color: #dcdde1;
+        }
+        
+        /* 底部时间显示 */
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 10;
+        }
+        
+        .time-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #current-date, #current-time {
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+        }
+        
+        #current-date {
+            font-size: 1.2rem;
+            color: #dcdde1;
+            margin-bottom: 5px;
+        }
+        
+        #current-time {
+            font-size: 2.5rem;
+            letter-spacing: 2px;
+            color: #f8ff00;
+            text-shadow: 0 0 10px rgba(248, 255, 0, 0.3);
+        }
+        
+        /* 动画效果 */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .title {
+                font-size: 3rem;
+                padding: 10px 15px;
+            }
+            
+            .title::after {
+                width: 150px;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
+                padding: 0 15px;
+            }
+            
+            .wifi-icon i {
+                font-size: 6rem;
+            }
+            
+            #current-time {
+                font-size: 2rem;
+            }
+            
+            .connection-status {
+                padding: 12px 20px;
+            }
+            
+            .bg-element:nth-child(1) {
+                width: 200px;
+                height: 200px;
+                top: -100px;
+                right: -80px;
+            }
+            
+            .bg-element:nth-child(2) {
+                width: 150px;
+                height: 150px;
+                bottom: 80px;
+                left: -80px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .title {
+                font-size: 2.2rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .wifi-icon i {
+                font-size: 5rem;
+            }
+            
+            #current-time {
+                font-size: 1.6rem;
+            }
+            
+            #current-date {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 背景装饰元素 -->
+    <div class="bg-element"></div>
+    <div class="bg-element"></div>
+    <div class="bg-element"></div>
+    
+    <!-- 主内容容器 -->
+    <div class="container">
+        <h1 class="title">人民的WiFi</h1>
+        
+        <p class="subtitle">
+            连接你我，服务大众。免费的公共WiFi网络，让信息无界，让沟通无限。随时随地，畅享高速网络，体验数字化生活带来的便捷与乐趣。
+        </p>
+        
+        <div class="wifi-icon">
+            <i class="fas fa-wifi"></i>
+        </div>
+        
+        <div class="connection-status">
+            <div class="status-dot"></div>
+            <div class="status-text">已连接 | 信号强度：优秀 | 加密：WPA3</div>
+        </div>
+    </div>
+    
+    <!-- 底部时间显示 -->
+    <footer class="footer">
+        <div class="time-container">
+            <div id="current-date"></div>
+            <div id="current-time"></div>
+        </div>
+    </footer>
+
+    <script>
+        // 更新时间函数
+        function updateTime() {
+            const now = new Date();
+            
+            // 格式化日期
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+            const weekday = weekdays[now.getDay()];
+            
+            // 格式化时间
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            
+            // 更新日期显示
+            document.getElementById('current-date').textContent = `${year}年${month}月${day}日 ${weekday}`;
+            
+            // 更新时间显示
+            document.getElementById('current-time').textContent = `${hours}:${minutes}:${seconds}`;
+        }
+        
+        // 初始调用并设置定时器每秒更新
+        updateTime();
+        setInterval(updateTime, 1000);
+        
+        // 添加一些交互效果
+        document.querySelector('.wifi-icon').addEventListener('click', function() {
+            const icon = this.querySelector('i');
+            icon.style.color = icon.style.color === 'rgb(248, 255, 0)' ? '#4cd137' : '#f8ff00';
+            
+            // 短暂动画效果
+            icon.style.transform = 'scale(1.2)';
+            setTimeout(() => {
+                icon.style.transform = 'scale(1)';
+            }, 200);
+        });
+        
+        // 响应窗口大小变化调整背景元素
+        window.addEventListener('resize', function() {
+            const bgElements = document.querySelectorAll('.bg-element');
+            
+            // 在移动设备上减小背景元素大小
+            if (window.innerWidth <= 768) {
+                bgElements.forEach(el => {
+                    el.style.width = Math.min(parseInt(el.style.width) || 150, 200) + 'px';
+                    el.style.height = Math.min(parseInt(el.style.height) || 150, 200) + 'px';
+                });
+            }
+        });
+    </script>
+</body>
+</html>
