@@ -1,17 +1,17 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>小破站解压</title>
-  <script src="lib/zip.min.js?v=202610073"></script>
-  <script src="lib/fflate.min.js?v=202610073"></script>
-  <link rel="stylesheet" href="lib/github-dark.min.css?v=202610073" id="hljs-dark" media="(prefers-color-scheme: dark)">
-  <script src="lib/highlight.min.js?v=202610073"></script>
-  <script src="lib/pdf.min.js?v=202610073"></script>
-  <script src="lib/mammoth.min.js?v=202610073"></script>
-  <script src="lib/xlsx.min.js?v=202610073"></script>
-  <script src="preview.js?v=202610073"></script>
+  <script src="lib/zip.min.js?v=202610075"></script>
+  <script src="lib/fflate.min.js?v=202610075"></script>
+  <link rel="stylesheet" href="lib/github-dark.min.css?v=202610075" id="hljs-dark" media="(prefers-color-scheme: dark)">
+  <script src="lib/highlight.min.js?v=202610075"></script>
+  <script src="lib/pdf.min.js?v=202610075"></script>
+  <script src="lib/mammoth.min.js?v=202610075"></script>
+  <script src="lib/xlsx.min.js?v=202610075"></script>
+  <script src="preview.js?v=202610075"></script>
   <style>
     :root {
       --bg: #f5f5f7;
@@ -1210,7 +1210,7 @@ const app = {
       throw new Error('该格式超过 1GB，为避免内存溢出请使用 ZIP 格式');
     }
     if (typeof SevenZipWasm === 'undefined') {
-      await this.loadScript('sevenzip-wasm.js?v=202610073');
+      await this.loadScript('sevenzip-wasm.js?v=202610075');
     }
     if (!this.szInstance) {
       this.szInstance = await SevenZipWasm({
@@ -1387,6 +1387,7 @@ const app = {
       'mp3','wav','ogg','flac','m4a','aac','opus','wma',
       'pdf','txt','md','log',
       'doc','docx','xls','xlsx','csv',
+      'pptx','pptm','ppsx','ppt',
       'c','h','s','java','py','html','htm','css','js','ts','jsx','tsx','json','xml','yml','yaml','toml','ini','conf','rs','go','php','cpp','cc','cxx','sh','bat','cmd','sql','rb','swift','kt','dart','vue'].includes(ext);
     if (!previewable) {
       // 不支持预览的文件：点击直接下载
@@ -1908,7 +1909,7 @@ const app = {
   async compress7z(password, level) {
     // 懒加载 sevenzip-wasm
     if (typeof SevenZipWasm === 'undefined') {
-      await this.loadScript('sevenzip-wasm.js?v=202610073');
+      await this.loadScript('sevenzip-wasm.js?v=202610075');
     }
     const sevenZip = await SevenZipWasm({
       printErr: () => {} // 静默 stderr

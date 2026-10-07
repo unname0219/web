@@ -10,6 +10,8 @@ const Preview = {
   _historyPushed: false,
   // 渲染令牌：每次 open/teardown 自增，过期渲染任务直接中止
   _renderToken: 0,
+  // PPT 预览器实例（pptx-preview），teardown 时 destroy
+  _pptxPager: null,
 
   init() {
     this.el = document.getElementById('preview-modal');
@@ -206,6 +208,72 @@ const Preview = {
       wrap.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;overflow:auto;padding:16px;background:var(--surface);';
       wrap.innerHTML = `<style>table{border-collapse:collapse;font-size:13px}td,th{border:1px solid var(--border);padding:4px 8px}th{background:var(--surface-hover);font-weight:600}</style>` + html;
       body.appendChild(wrap);
+    } else if (type === 'pptx') {
+      // PPT 预览：pptx-preview（纯前端 HTML 渲染，实测保真度优于 pptx-viewer），懒加载
+      // 仅支持 .pptx/.pptm/.ppsx；老版 .ppt 二进制格式无法解析，走失败提示
+      await this.progress('正在加载 PPT 组件...');
+      if (token !== this._renderToken) return;
+      try {
+        await this.loadPptxLib();
+      } catch (e) {
+        if (token !== this._renderToken) return;
+        RingProgress.hide();
+        this.el.classList.add('active');
+        if (!hadHistory) {
+          try { history.pushState({ __preview: true }, ''); this._historyPushed = true; hadHistory = true; } catch(e2) {}
+        }
+        const wrap0 = document.createElement('div');
+        wrap0.className = 'preview-doc';
+        wrap0.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;overflow:auto;background:#2b2b2b;display:flex;align-items:center;justify-content:center;';
+        body.appendChild(wrap0);
+        this.showPptxFatal(wrap0, e, blob, filename);
+        return;
+      }
+      if (token !== this._renderToken) return;
+
+      const wrap = document.createElement('div');
+      wrap.className = 'preview-doc';
+      wrap.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;overflow:auto;background:#2b2b2b;padding:12px;display:flex;flex-direction:column;align-items:center;';
+      body.appendChild(wrap);
+      this.el.classList.add('active');
+      if (!hadHistory) {
+        try { history.pushState({ __preview: true }, ''); this._historyPushed = true; hadHistory = true; } catch(e) {}
+      }
+      RingProgress.show('正在解析 PPT...');
+
+      try {
+        // 画布按幻灯片真实比例：解析前先从 ppt/presentation.xml 读 sldSz，
+        // 否则 4:3 的 PPT 会被按 16:9 拉伸变形
+        let ratio = 9 / 16;
+        try {
+          const sz = await this.sniffPptxSize(blob);
+          if (sz.cx > 0 && sz.cy > 0) ratio = sz.cy / sz.cx;
+        } catch (e) {}
+        if (token !== this._renderToken) return;
+        const w = Math.min(Math.max(wrap.clientWidth - 24, 320), 1080);
+        const h = Math.round(w * ratio);
+        const frame = document.createElement('div');
+        frame.style.cssText = 'width:' + w + 'px;height:' + h + 'px;max-width:100%;margin:auto;flex:0 0 auto;position:relative;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.35);border-radius:4px;overflow:hidden;';
+        wrap.appendChild(frame);
+        // 最大化/窗口切换、屏幕旋转时按容器宽度缩放（zoom 参与布局且文字重排，放大后仍清晰）
+        const fit = () => {
+          const avail = wrap.clientWidth - 24;
+          if (avail > 0) frame.style.zoom = String(Math.min(avail / w, 2.2));
+        };
+        fit();
+        this._pptxFit = fit;
+        window.addEventListener('resize', fit);
+        const pager = window.pptxPreview.init(frame, { width: w, height: h });
+        this._pptxPager = pager; // teardown 时 destroy 释放
+        await pager.preview(await this.readAB(blob));
+        if (token !== this._renderToken) return;
+        RingProgress.hide();
+      } catch (e) {
+        if (token !== this._renderToken) return;
+        RingProgress.hide();
+        wrap.innerHTML = '';
+        this.showPptxFatal(wrap, e, blob, filename);
+      }
     } else {
       // 纯文本 / markdown
       await this.progress('正在读取文件...');
@@ -249,6 +317,15 @@ const Preview = {
     // 使进行中的渲染任务立刻失效，并隐藏可能还在的环形进度条
     this._renderToken++;
     RingProgress.hide();
+    // 释放 PPT 预览器（pptx-preview destroy）与缩放监听
+    if (this._pptxFit) {
+      window.removeEventListener('resize', this._pptxFit);
+      this._pptxFit = null;
+    }
+    if (this._pptxPager) {
+      try { this._pptxPager.destroy(); } catch(e) {}
+      this._pptxPager = null;
+    }
     if (this.el) this.el.classList.remove('active');
     document.querySelector('.preview-container')?.classList.remove('fullscreen');
     const vid = document.getElementById('preview-video');
@@ -288,9 +365,9 @@ const Preview = {
     // Worker 用绝对路径，避免部分手机浏览器相对路径解析失败
     try {
       pdfjsLib.GlobalWorkerOptions.workerSrc =
-        new URL('lib/pdf.worker.min.js?v=202610073', location.href).href;
+        new URL('lib/pdf.worker.min.js?v=202610075', location.href).href;
     } catch (e) {
-      try { pdfjsLib.GlobalWorkerOptions.workerSrc = 'lib/pdf.worker.min.js?v=202610073'; } catch {}
+      try { pdfjsLib.GlobalWorkerOptions.workerSrc = 'lib/pdf.worker.min.js?v=202610075'; } catch {}
     }
 
     const buf = await this.readAB(blob);
@@ -338,6 +415,62 @@ const Preview = {
     wrap.appendChild(box);
   },
 
+  // 懒加载 pptx-preview UMD（纯前端 PPTX 渲染，ISC 许可）
+  loadPptxLib() {
+    if (window.pptxPreview && window.pptxPreview.init) return Promise.resolve();
+    return new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = 'lib/pptx-preview.umd.js?v=202610075';
+      s.onload = () => {
+        if (window.pptxPreview && window.pptxPreview.init) resolve();
+        else reject(new Error('PPT 组件加载异常'));
+      };
+      s.onerror = () => reject(new Error('PPT 组件加载失败（lib/pptx-preview.umd.js）'));
+      document.head.appendChild(s);
+    });
+  },
+
+  // 从 pptx（本质是 zip）读 ppt/presentation.xml 的 sldSz，拿到幻灯片真实宽高（EMU）
+  async sniffPptxSize(blob) {
+    const reader = new zip.ZipReader(new zip.BlobReader(blob));
+    try {
+      const entries = await reader.getEntries();
+      const entry = entries.find(e => e.filename === 'ppt/presentation.xml');
+      if (!entry) throw new Error('不是有效的 pptx 文件');
+      const xml = await entry.getData(new zip.TextWriter());
+      const tag = (xml.match(/<p:sldSz[^>]*>/) || [])[0];
+      if (!tag) throw new Error('缺少幻灯片尺寸定义');
+      const cx = (tag.match(/cx="(\d+)"/) || [])[1];
+      const cy = (tag.match(/cy="(\d+)"/) || [])[1];
+      if (!cx || !cy) throw new Error('幻灯片尺寸解析失败');
+      return { cx: +cx, cy: +cy };
+    } finally {
+      try { await reader.close(); } catch (e) {}
+    }
+  },
+
+  // PPT 无法渲染：错误说明 + 手动下载按钮（用户手势触发，不自动下载）
+  showPptxFatal(wrap, err, blob, filename) {
+    const box = document.createElement('div');
+    box.style.cssText = 'max-width:420px;background:#3a3d42;border-radius:12px;padding:20px;color:#fff;font-size:14px;line-height:1.7;text-align:center;word-break:break-word;';
+    const msg = (err && err.message) ? err.message : String(err);
+    const isLegacy = /\.ppt$/i.test(filename || '');
+    box.innerHTML =
+      '<div style="font-size:15px;font-weight:600;margin-bottom:8px;">当前无法预览此 PPT</div>' +
+      '<div style="opacity:0.75;margin-bottom:16px;font-size:13px;">' + this.escapeHtmlText(
+        isLegacy ? '老版 .ppt（二进制）格式暂不支持在线预览，建议用 PowerPoint / WPS 另存为 .pptx 后再试。' : msg
+      ) + '</div>';
+    const btn = document.createElement('button');
+    btn.textContent = '⬇ 手动下载该文件';
+    btn.style.cssText = 'border:none;background:#4f8ef7;color:#fff;font-size:14px;font-weight:600;padding:10px 20px;border-radius:10px;cursor:pointer;';
+    btn.onclick = () => {
+      const name = filename.split('/').pop();
+      if (window.app && app.requestDownload) app.requestDownload(blob, name);
+    };
+    box.appendChild(btn);
+    wrap.appendChild(box);
+  },
+
   escapeHtmlText(s) {
     return String(s).replace(/[&<>"']/g, c => (
       { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
@@ -346,6 +479,8 @@ const Preview = {
 
   toggleSize() {
     document.querySelector('.preview-container')?.classList.toggle('fullscreen');
+    // PPT 画布随容器尺寸重新适配
+    if (this._pptxFit) this._pptxFit();
   },
 
   getMime(ext) {
@@ -380,6 +515,7 @@ const Preview = {
     if (ext === 'pdf') return 'pdf';
     if (['doc','docx'].includes(ext)) return 'word';
     if (['xls','xlsx','csv'].includes(ext)) return 'excel';
+    if (['pptx','pptm','ppsx','ppt'].includes(ext)) return 'pptx';
     if (code.includes(ext)) return 'code';
     return 'text';
   },
