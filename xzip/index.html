@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
@@ -1703,7 +1703,9 @@ const app = {
   onCompressFilesSelect(fileList) {
     if (!fileList || !fileList.length) return;
     for (const file of fileList) {
-      const path = file.webkitRelativePath || file.name;
+      // 拖拽的文件夹文件已在 getDroppedFiles 里带相对路径 _path，必须保留；
+      // webkitRelativePath 只有目录选择器才有，拖拽文件上恒为空，不能拿来覆盖
+      const path = file._path || file.webkitRelativePath || file.name;
       if (!this.compressFiles.some(f => f._path === path)) {
         file._path = path;
         file._id = Math.random().toString(36).slice(2);
