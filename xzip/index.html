@@ -69,6 +69,7 @@
 
     /* ===== Header ===== */
     header {
+      position: relative;
       flex-shrink: 0;
       padding: 14px 18px;
       padding-top: calc(14px + env(safe-area-inset-top));
@@ -98,6 +99,26 @@
     }
     header .back-btn:hover { background: var(--surface-hover); }
     header .spacer { width: 40px; }
+    header .donate-btn {
+      position: absolute;
+      right: calc(18px + env(safe-area-inset-right));
+      top: 50%;
+      margin-top: -16px;
+      background: linear-gradient(135deg, #ff9500, #ff2d55);
+      border: none;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: var(--font);
+      padding: 7px 13px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: var(--transition);
+      white-space: nowrap;
+      box-shadow: 0 2px 8px rgba(255, 45, 85, 0.3);
+      z-index: 11;
+    }
+    header .donate-btn:hover { filter: brightness(1.1); }
 
     /* ===== Main Content ===== */
     main {
@@ -283,6 +304,16 @@
     .modal-btn-primary:hover { background: var(--primary-hover); }
     .modal-btn-secondary { background: var(--surface-hover); color: var(--text); border: 1px solid var(--border); }
     .modal-btn-secondary:hover { background: var(--border); }
+    .modal-btn-donate { background: linear-gradient(135deg, #ff9500, #ff2d55); color: #fff; }
+    .modal-btn-donate:hover { filter: brightness(1.1); }
+    .donate-qr {
+      display: block;
+      margin: 0 auto 20px;
+      width: 100%;
+      max-width: min(280px, 72vw);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
     .modal-close {
       position: absolute;
       top: 12px;
@@ -595,6 +626,7 @@
     <header>
       <button class="back-btn" onclick="app.goHome()" title="返回">🏠</button>
       <h1>📦 解压文件</h1>
+      <button class="donate-btn" onclick="app.openDonate()" title="捐赠支持">💝 捐赠</button>
       <div class="spacer"></div>
     </header>
     <main>
@@ -624,6 +656,7 @@
     <header>
       <button class="back-btn" onclick="app.goHome()" title="返回">🏠</button>
       <h1>🗜️ 压缩文件</h1>
+      <button class="donate-btn" onclick="app.openDonate()" title="捐赠支持">💝 捐赠</button>
       <div class="spacer"></div>
     </header>
     <main>
@@ -678,7 +711,7 @@
   </div>
 
   <footer>
-    <a href="https://github.com/gildas-lormeau/zip-manager" target="_blank" rel="noopener">Inspired by zip-manager</a>
+    <a href="licenses.html">开源许可</a> · <a href="https://github.com/gildas-lormeau/zip-manager" target="_blank" rel="noopener">Inspired by zip-manager</a>
   </footer>
 </div>
 
@@ -705,6 +738,31 @@
     <div class="modal-actions">
       <button class="modal-btn modal-btn-secondary" onclick="app.cancelDownload()">取消</button>
       <button class="modal-btn modal-btn-primary" onclick="app.confirmDownload()">⬇️ 立即下载</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SUPPORT PROMPT MODAL（压缩/解压完成：先询问是否捐赠，可随时关闭，不影响使用） ===== -->
+<div class="modal-overlay" id="support-modal">
+  <div class="modal">
+    <div class="modal-title" id="support-title">🎉 完成了</div>
+    <div class="modal-subtitle" id="support-text"></div>
+    <div class="modal-actions" style="flex-direction:row">
+      <button class="modal-btn modal-btn-primary" id="support-download-btn" style="flex:1;display:none" onclick="app.supportDownload()">⬇️ 下载</button>
+      <button class="modal-btn modal-btn-donate" style="flex:1" onclick="app.supportDonate()">💝 捐赠</button>
+      <button class="modal-btn modal-btn-secondary" style="flex:1" onclick="app.supportClose()">关闭</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DONATE QR MODAL ===== -->
+<div class="modal-overlay" id="donate-modal">
+  <div class="modal">
+    <div class="modal-title">💝 感谢支持</div>
+    <div class="modal-subtitle">扫码请作者喝杯饮料，所有功能依然免费</div>
+    <img src="donate.jpg" alt="赞赏收款码" class="donate-qr">
+    <div class="modal-actions">
+      <button class="modal-btn modal-btn-secondary" onclick="app.closeDonate()">关闭</button>
     </div>
   </div>
 </div>
@@ -1563,7 +1621,12 @@ const app = {
       this.showProgress('extract', Math.round(((i + 1) / total) * 100), `解压中 ${i+1}/${total}`);
     }
     this.hideProgress('extract');
-    this.showToast(failed ? `完成，但有 ${failed} 个文件失败` : '解压完成！');
+    if (failed) {
+      this.showToast(`完成，但有 ${failed} 个文件失败`);
+    } else {
+      // 解压到文件夹全部成功：弹出致谢 + 捐赠询问（可一键关闭）
+      this.showSupportDialog('extract');
+    }
   },
 
   async extractEntry(entry, dirHandle, password) {
@@ -1777,7 +1840,7 @@ const app = {
       this.hideProgress('compress');
       const outName = 'XPZ-' + this.timestamp() + ext;
       this.downloadBlob(blob, outName);
-      this.showToast('压缩完成，开始下载');
+      this.showSupportDialog('compress', blob, outName);
       // 显示哈希信息
       this.computeHashes(blob).then(hashes => {
         this.showFileInfo('compress-info', outName, blob.size, hashes);
@@ -2209,6 +2272,40 @@ const app = {
   cancelDownload() {
     document.getElementById('download-modal').classList.remove('active');
     this.pendingDownload = null;
+  },
+
+  /* ---- 完成 + 捐赠询问：压缩/解压完成后弹出，一键关闭，不强制打断 ---- */
+  supportInfo: null,
+  showSupportDialog(kind, blob, filename) {
+    // kind: 'compress' | 'extract'；compress 附带 blob，供手动补下载防拦截
+    this.supportInfo = (kind === 'compress' && blob) ? { blob, filename } : null;
+    document.getElementById('support-download-btn').style.display = this.supportInfo ? '' : 'none';
+    document.getElementById('support-title').textContent = kind === 'compress' ? '🎉 压缩完毕' : '🎉 解压完毕';
+    document.getElementById('support-text').textContent = kind === 'compress'
+      ? '将自动触发下载。如果觉得好用，可以考虑支持我们，感谢每一份心意！'
+      : '文件已保存到所选文件夹。如果觉得好用，可以考虑支持我们，感谢每一份心意！';
+    document.getElementById('support-modal').classList.add('active');
+  },
+  supportDownload() {
+    const info = this.supportInfo;
+    document.getElementById('support-modal').classList.remove('active');
+    this.supportInfo = null;
+    if (info) this.downloadBlob(info.blob, info.filename); // 用户手势内手动补一次下载
+  },
+  supportDonate() {
+    document.getElementById('support-modal').classList.remove('active');
+    this.supportInfo = null;
+    this.openDonate();
+  },
+  supportClose() {
+    document.getElementById('support-modal').classList.remove('active');
+    this.supportInfo = null;
+  },
+  openDonate() {
+    document.getElementById('donate-modal').classList.add('active');
+  },
+  closeDonate() {
+    document.getElementById('donate-modal').classList.remove('active');
   },
 
   // 修复 Chrome Blob bug：读取 Blob 时确保数据完整
